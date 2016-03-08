@@ -1,0 +1,35 @@
+---
+title: "Exponential Distribution Simulation"
+author: "Belov Anton"
+output: pdf_document
+---
+
+#Overview
+In this project we will investigate the exponential distribution in R and compare it with the Central Limit Theorem. The exponential distribution can be simulated in R with rexp(n, lambda) where lambda is the rate parameter. The parameter lambda will be equal to 0.2.
+
+#Simulation
+First of all let's calculate mean values of 1000 simulations of 40 exponentially distributed values.
+```{r}
+    means <- NULL
+    for(i in 1:1000) means <- c(means, mean(rexp(40, 0.2)))
+    hist(means, probability = TRUE)
+    tMean = 1/0.2
+    distMean =mean(means)
+    abline(v = distMean, lwd = 2, col = "blue")
+```
+
+The theoretical mean is equal to `r tMean` and distribution mean is equal to `r distMean`
+```{r}
+    tVar = ((1/0.2)^2)/40
+    distVar = var(means)
+```
+The theoretical variance of the mean is equal to `r tVar` and distribution variance of the mean is equal to `r distVar`.
+
+It is fairly easy to see that the distribution of the means looks pretty much like a normal distribution.
+```{r}
+    hist(means, probability = TRUE)
+    curve(dnorm(x, mean = 1/0.2, sd = (1/0.2)/sqrt(40)), col = "red", add = TRUE)
+```
+
+#Conclusion
+In this project we investigated the exponential distribution in R and compared it with the Central Limit Theorem. It has been shown that the mean values are distributed around the theoretical mean, that the variance of the mean is close to its theoretical value and that the means distribution is approximated by a normal distribution.

@@ -1,0 +1,92 @@
+---
+title: "Tooth Growth Analysis"
+author: "Belov Anton"
+output: pdf_document
+---
+
+#Overview
+In this project we're going to analyze the ToothGrowth data in the R datasets package. Our goal is by using confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose.
+
+```{r}
+    library(reshape2)
+    data("ToothGrowth")
+```
+
+#Analysis
+First of all let's do some exploratory analysis.
+
+```{r}
+    coplot(len ~ dose | supp, data = ToothGrowth, panel = panel.smooth, xlab = "ToothGrowth data: length vs dose, given type of supplement")
+```
+
+We can see that length of teeth depends on the dose much more than on the type of supplement. But let's have a look at what statistical tests say.
+
+Comparing length at different doses by supplement type we assume that the variance is constant var.equal = TRUE. Since guinea pigs are different in each group we assume that measurements are not paired paired = FALSE.
+
+Comparing length at 0.5 dose.
+```{r}
+    oj <- ToothGrowth[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 0.5,]
+    vc <- ToothGrowth[ToothGrowth$supp == "VC" & ToothGrowth$dose == 0.5,]
+    t.test(oj$len, vc$len, paired = FALSE, var.equal = TRUE, conf.level = 0.95)
+```
+
+95% that orange juice gives better growth than ascorbic acid.
+
+Comparing length at 1.0 dose.
+```{r}
+    oj <- ToothGrowth[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 1,]
+    vc <- ToothGrowth[ToothGrowth$supp == "VC" & ToothGrowth$dose == 1,]
+    t.test(oj$len, vc$len, paired = FALSE, var.equal = TRUE, conf.level = 0.95)
+```
+
+95% that orange juice gives better growth than ascorbic acid.
+
+Comparing length at 2.0 dose.
+```{r}
+    oj <- ToothGrowth[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 2,]
+    vc <- ToothGrowth[ToothGrowth$supp == "VC" & ToothGrowth$dose == 2,]
+    t.test(oj$len, vc$len, paired = FALSE, var.equal = TRUE, conf.level = 0.95)
+```
+
+We can not say which method is better, the mans are almost identical and confidence interval contains zero.
+
+Now let's compare length by dose which is given by the same method. We still assume that the variance is constant var.equal = TRUE. Since guinea pigs are different in each group we assume that measurements are not paired paired = FALSE.
+
+Comparing length 0.5 and 1.0 doses at orange juice method .
+```{r}
+    oj <- ToothGrowth[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 1,]
+    vc <- ToothGrowth[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 0.5,]
+    t.test(oj$len, vc$len, paired = FALSE, var.equal = TRUE, conf.level = 0.95)
+```
+
+95% that dose of 1 gives better growth than dose of 0.5.
+
+Comparing length 1.0 and 2.0 doses at orange juice method .
+```{r}
+    oj <- ToothGrowth[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 2,]
+    vc <- ToothGrowth[ToothGrowth$supp == "OJ" & ToothGrowth$dose == 1,]
+    t.test(oj$len, vc$len, paired = FALSE, var.equal = TRUE, conf.level = 0.95)
+```
+
+95% that dose of 2 gives better growth than dose of 1 yet the lowe bound is quite near to zero.
+
+Comparing length 0.5 and 1.0 doses at ascorbic acid method .
+```{r}
+    oj <- ToothGrowth[ToothGrowth$supp == "VC" & ToothGrowth$dose == 1,]
+    vc <- ToothGrowth[ToothGrowth$supp == "VC" & ToothGrowth$dose == 0.5,]
+    t.test(oj$len, vc$len, paired = FALSE, var.equal = TRUE, conf.level = 0.95)
+```
+
+95% that dose of 1 gives better growth than dose of 0.5.
+
+Comparing length 1.0 and 2.0 doses at ascorbic acid method .
+```{r}
+    oj <- ToothGrowth[ToothGrowth$supp == "VC" & ToothGrowth$dose == 2,]
+    vc <- ToothGrowth[ToothGrowth$supp == "VC" & ToothGrowth$dose == 1,]
+    t.test(oj$len, vc$len, paired = FALSE, var.equal = TRUE, conf.level = 0.95)
+```
+
+95% that dose of 2 gives better growth than dose of 1.
+
+#Summary
+The tests have shown that bigger dose gives bigger teeth with 95% confidence at each method. Besides orange juice gives better growth at doses of 0.5 and 1.0 but at the dose of 2.0 the length does not depend on the method with 95% confidence.
